@@ -1,4 +1,5 @@
 
+
 # Find admission project
 
 ## What is Find admission?
@@ -46,3 +47,36 @@ With the ground rules out of the way, let's talk about the coarse architecture o
 
 ```
 
+
+### Details implementation
+#### API Folder
+Depending on the system structure, we distinguish four (04) interconnected main domains, \
+each system will be an independent application for seperation of conerns and for system scalability\
+
+the structure of each folder will be the same:
+
+```
+    domain-name/
+    ├── subdomains/
+        ├── subdomain-one
+        ├── subdomain-two
+    ├── interface // contains api routes
+    ├── model  // contains the db schemas
+    ├── repositoy // responsible to query/mutate the database
+        ├── mutation
+        ├── queries
+    ├── adapters // responsible to prepare the data to the client and vise-virsa
+```
+
+Each folder for the next part are independent systems, with their own application skeleton and backbone
+
+### Bigbang Folder
+This is a system responsible for sending notification from each part of the four previous system for this purpose, we use a memory-cache base database (Redis), and with a librery like bull, we can add to queue and then we process them in the perfect time.
+### Chronos Folder:
+when it comes to background jobs, it's preferable to make it as independent system, so do not overload the core system with something time/processing consuming.
+### Hermes Folder
+it's a job-base system, so everything related to email the users, will be processed here,
+### stars-es Folder
+here we can make company future thoughts, by rating every action by the users
+### shared Folder
+this is where all main functionality resides, where we define services methods

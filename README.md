@@ -40,8 +40,8 @@ With the ground rules out of the way, let's talk about the coarse architecture o
     ├── bigbang // Worker server for notification and general processing
     ├── chronos // Worker server for crons jobs
     ├── email-templates
-    ├── hermes // Email sending
-    ├── stars-es // Worker server for (reputation)
+    ├── hudhud // Email sending
+    ├── digger // Worker server for (reputation)
     ├── shared // Shared JavaScript code
     ├── docs // Documentation for the entire Backend
 
@@ -74,9 +74,9 @@ Each folder for the next part are independent systems, with their own applicatio
 This is a system responsible for sending notification from each part of the four previous system for this purpose, we use a memory-cache base database (Redis), and with a librery like bull, we can add to queue and then we process them in the perfect time.
 ### Chronos Folder:
 when it comes to background jobs, it's preferable to make it as independent system, so do not overload the core system with something time/processing consuming.
-### Hermes Folder
+### Hudhud Folder
 it's a job-base system, so everything related to email the users, will be processed here,
-### stars-es Folder
+### Digger Folder
 here we can make company future thoughts, by rating every action by the users
-### shared Folder
+### Shared Folder
 this is where all main functionality resides, where we define services methods

@@ -77,6 +77,6 @@ when it comes to background jobs, it's preferable to make it as independent syst
 ### Hudhud Folder
 it's a job-base system, so everything related to email the users, will be processed here,
 ### Digger Folder
-here we can make company future thoughts, by rating every action by the users
+here we can make company future thoughts, by rating every action by the users,
 ### Shared Folder
-this is where all main functionality resides, where we define services methods
+this is where all main functionality resides, where we define services methods,

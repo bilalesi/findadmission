@@ -18,8 +18,8 @@ const validate_institution_fn = async (institution) => {
     try {
         const values = await institutionSchema.validateAsync(institution, { abortEarly: true, allowUnknown: true });
         return {
-            values,
             valid: true,
+            values,
         }
     } catch (error) {
         return {

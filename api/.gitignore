@@ -1,0 +1,34 @@
+
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.test
+
+node_modules
+npm-debug.log
+build
+.DS_Store
+npm-debug.log
+yarn-error.log
+debug
+build-api
+build-hudhud
+build-bigbang
+build-chronos
+build-digger
+build-chronos
+package-lock.json
+.vscode
+dump.rdb
+.env
+.env.*

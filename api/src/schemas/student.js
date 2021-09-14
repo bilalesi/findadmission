@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import paginator from 'mongoose-paginate-v2';
-import { customAlphabet } from 'nan'
+import { customAlphabet } from 'nanoid';
 const nanoid = customAlphabet('1234567890findadmission', 10);
 
-const { Schema, Model, Types } = mongoose;
+const { Schema, model, Types } = mongoose;
 
 const studentSchema = new Schema({
     uri: { type: String, default: '' },
@@ -11,6 +11,7 @@ const studentSchema = new Schema({
     firstname: { type: String, default: '' },
     lastname: { type: String, default: '' },
     fullname: { type: String, default: '' },
+    descriptif_name: { type: String, default: '' },
     gender: { type: String, enum: ['male', 'female', ''], default: '' },
     birthday: { type: Date, default: '' },
     email: { type: String, default: '' },
@@ -23,6 +24,7 @@ const studentSchema = new Schema({
         zip: { type: String, default: '' },
         country: { type: String, default: '' },
     },
+    country: { type: Types.ObjectId, ref: 'Countries' },
     password: { type: String, default: '' },
     is_parent: { type: Boolean, default: false },
     type: { type: String, enum: ['student', 'parent'], default: 'student' },
@@ -35,7 +37,7 @@ const studentSchema = new Schema({
     my_plan: {
         study_level: { type: Types.ObjectId, ref: 'Study_levels' },
         start_date: { type: Date, default: '' },
-        budget: { 
+        budget: {
             from: { type: Number, default: 0 },
             to: { type: Number, default: 0 },
         },
@@ -124,6 +126,10 @@ const studentSchema = new Schema({
         default: [],
     },
     is_verified: { type: Boolean, default: false },
+    sms_verification: { type: Number, default: false },
+    email_verification_token: { type: String, default: false },
+    email_verification_token_expire: { type: Date, default: false },
+    auth_token: { type: String, default: '' },
 }, {
     timestamps: true,
 });
@@ -139,8 +145,9 @@ studentSchema.pre('save', function (next) {
     student.email = student.email.toLowerCase();
     if (!student.isModified('password')) return next();
     student.password = hashedPassword(student.password);
-    student.uri = _.kebabCase(`student ${student.lastName} ${student.firstName} ${nanoid()}`);
-    student.fullname = `${student.firstName} ${student.lastName} ${student.email.split('@')[0]}`;
+    student.uri = _.kebabCase(`${student.type === 'student' ? 'student' : 'parent' } ${student.lastName} ${student.firstName} ${nanoid()}`);
+    student.descriptif_name = student.type === 'student' ? `${student.firstName} ${student.lastName} ${student.email.split('@')[0]}`.toLocaleLowerCase() : '';
+    student.fullname = student.type === 'student' ? `${student.firstName} ${student.lastName}`.toUpperCase() : '';
     return next();
 });
 
@@ -158,4 +165,4 @@ studentSchema.index({ fullname: 'text', email: 'text' });
 
 
 studentSchema.plugin(paginator);
-export default Model('Student', studentSchema, 'Students');
+export default model('Student', studentSchema, 'Students');

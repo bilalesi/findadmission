@@ -1812,6 +1812,11 @@ datadog-metrics@^0.9.3:
     debug "3.1.0"
     dogapi "2.8.4"
 
+dayjs@^1.10.7:
+  version "1.10.7"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.7.tgz#2cf5f91add28116748440866a0a1d26f3a6ce468"
+  integrity sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==
+
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -2659,6 +2664,11 @@ http-errors@~1.7.2:
     setprototypeof "1.1.1"
     statuses ">= 1.5.0 < 2"
     toidentifier "1.0.0"
+
+http-status-codes@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/http-status-codes/-/http-status-codes-2.1.4.tgz#453d99b4bd9424254c4f6a9a3a03715923052798"
+  integrity sha512-MZVIsLKGVOVE1KEnldppe6Ij+vmemMuApDfjhVSLzyYP+td0bREEYyAoIw9yFePoBXManCuBqmiNP5FqJS5Xkg==
 
 https-proxy-agent@^5.0.0:
   version "5.0.0"
@@ -3921,6 +3931,11 @@ pause-stream@0.0.11:
   integrity sha1-/lo0sMvOErWqaitAPuLnO2AvFEU=
   dependencies:
     through "~2.3"
+
+phone@^3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/phone/-/phone-3.1.6.tgz#eefff0be1ce4ce9f2ee028c67be6b58dc5616ef1"
+  integrity sha512-46WCdbDG32OKoPsntTg2l0VBaWVWg0A3zvH5dUhApwOupyn7owXRtDBz6vAjsJiZQGTft++WvTxEZeqxlCUv9g==
 
 picomatch@^2.0.4, picomatch@^2.2.1:
   version "2.3.0"

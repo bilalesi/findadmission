@@ -1,30 +1,32 @@
 import joi from 'joi';
+import dayjs from 'dayjs';
+import phoneValidator from 'phone';
 
 
 const studentSchema = joi.object({
-    firstName: joi.string().required(),
-    lastName: joi.string().required(),
-    phone: joi.string().required(),
-    email:  joi.string().required(),
+    firstName: joi.string().min(2).required(),
+    lastName: joi.string().min(2).required(),
+    phone: joi.string().custom((value, helper) => !phoneValidator(value).isValid ? helper.message('phone must be valid') : true).required(),
+    whatsup: joi.string().required(),
+    email:  joi.string().email().required(),
     gender: joi.string().valid('male', 'female', '').required(),
     country: joi.string().required(),
     state: joi.string().required(),
-    birth_day: joi.string().required(),
-    birth_month: joi.string().required(),
-    birth_year: joi.string().required(),
-    whatsup_phone: joi.string().required(),
-    password: joi.string().required(),
-    confirm_password: joi.string().required(),
+    birth_day: joi.string().min(1).max(2).required(),
+    birth_month: joi.string().min(1).max(2).required(),
+    birth_year: joi.string().min(4).max(4).required(),
+    password: joi.string().min(8).max(14).required(),
+    confirm_password: joi.string().min(8).max(14).required().valid(joi.ref('password')),
     type: joi.string().valid('student', 'parent').required(),
-    fullname: joi.alternatives().conditional('type', { is: "parent", then: joi.string().required(), otherwise: joi.allow(null, "") }),
+    parent_fullname: joi.alternatives().conditional('type', { is: "parent", then: joi.string().required(), otherwise: joi.allow(null, "") }),
 });
 
-const validate_student_fn = async (student) => {
+const validateStudentFn = async (student) => {
     try {
         const values = await studentSchema.validateAsync(student, { abortEarly: true, allowUnknown: true });
         return {
-            values,
             valid: true,
+            values,
         }
     } catch (error) {
         return {
@@ -37,4 +39,11 @@ const validate_student_fn = async (student) => {
     }
 }
 
-export default validate_student_fn;
+const toDto = (student) => {
+    return ({
+        ...student,
+        birthday: dayjs(`${student.birth_year}-${student.birth_month}-${student.birth_day}`).toDate(),
+    })
+}
+export { toDto };
+export default validateStudentFn;

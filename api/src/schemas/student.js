@@ -7,15 +7,15 @@ const { Schema, model, Types } = mongoose;
 
 const studentSchema = new Schema({
     uri: { type: String, default: '' },
-    internalId: { type: String, default: nanoid },
+    internalId: { type: String, default: nanoid, unique: true },
     firstname: { type: String, default: '' },
     lastname: { type: String, default: '' },
     fullname: { type: String, default: '' },
     descriptif_name: { type: String, default: '' },
     gender: { type: String, enum: ['male', 'female', ''], default: '' },
     birthday: { type: Date, default: '' },
-    email: { type: String, default: '' },
-    phone: { type: String, default: '' },
+    email: { type: String, default: '', unique: true },
+    phone: { type: String, default: '', unique: true },
     whatsup: { type: String, default: '' },
     address: {
         street: { type: String, default: '' },
@@ -127,6 +127,7 @@ const studentSchema = new Schema({
     },
     is_verified: { type: Boolean, default: false },
     sms_verification: { type: Number, default: false },
+    six_6_degit_pin: { type: Number, default: false },
     email_verification_token: { type: String, default: false },
     email_verification_token_expire: { type: Date, default: false },
     auth_token: { type: String, default: '' },

@@ -2,11 +2,9 @@
 /**
  * The entry point for the server, this is where everything starts
  */
-require('dotenv').config('../.env');
+require('dotenv').config();
 const compression = require('compression');
 const debug = require('debug')('findadmission');
-debug('Server starting...');
-debug('logging with debug enabled!');
 import express from 'express';
 import toobusy from './shared/middlewares/toobusy';
 import run_connect_default_persistence_db from './shared/db';
@@ -22,7 +20,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
 
 const app = express();
-
+debug('Server created...');
 // Trust the now proxy
 app.set('trust proxy', true);
 app.use(toobusy);
@@ -74,26 +72,10 @@ async function start() {
     `)
   }
 }
-start()
-// process.on('unhandledRejection', async err => {
-//   console.error('Unhandled rejection', err);
-//   try {
-//     // await new Promise(resolve => Raven.captureException(err, resolve));
-//   } catch (err) {
-//     console.error('Raven error', err);
-//   } finally {
-//     process.exit(1);
-//   }
-// });
 
-// process.on('uncaughtException', async err => {
-//   console.error('Uncaught exception', err);
-//   try {
-//     // await new Promise(resolve => Raven.captureException(err, resolve));
-//   } catch (err) {
-//     console.error('Raven error', err);
-//   } finally {
-//     process.exit(1);
-//   }
-// });
+
+
+
+start();
+
 

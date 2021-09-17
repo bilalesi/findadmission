@@ -1,6 +1,9 @@
-export default (token) => {
+const jwt = require('jsonwebtoken');
+
+
+export default (token, key) => {
     try {
-        decoded = jwt.verify(token, process.env['AUTH_JWT_SIGNATURE']);
+        decoded = jwt.verify(token, process.env[key]);
         return {
             decoded,
             valid: true
@@ -8,9 +11,9 @@ export default (token) => {
     } catch (err) {
         let errMessage;
         if(err.name === 'TokenExpiredError') {
-            errMessage = 'This token has expired. You must login again.';
+            errMessage = 'This token has expired';
         } else {
-            errMessage = 'This token is invalid. You must login again.';
+            errMessage = 'This token is invalid';
         }
         return {
             valid: false,

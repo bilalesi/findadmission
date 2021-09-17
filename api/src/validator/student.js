@@ -6,7 +6,7 @@ import phoneValidator from 'phone';
 const studentSchema = joi.object({
     firstName: joi.string().min(2).required(),
     lastName: joi.string().min(2).required(),
-    phone: joi.string().custom((value, helper) => !phoneValidator(value).isValid ? helper.message('phone must be valid') : true).required(),
+    phone: joi.string().custom((value, helper) => !phoneValidator(value).isValid ? helper.message('Phone must be valid') : true).required(),
     whatsup: joi.string().required(),
     email:  joi.string().email().required(),
     gender: joi.string().valid('male', 'female', '').required(),

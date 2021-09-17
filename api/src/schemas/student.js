@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 import paginator from 'mongoose-paginate-v2';
 import { customAlphabet } from 'nanoid';
-const nanoid = customAlphabet('1234567890findadmission', 10);
+const nanoid = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 8);
 
 const { Schema, model, Types } = mongoose;
 
 const studentSchema = new Schema({
-    uri: { type: String, default: '' },
+    uri: { type: String, default: nanoid },
     internalId: { type: String, default: nanoid, unique: true },
     firstname: { type: String, default: '' },
     lastname: { type: String, default: '' },
@@ -30,6 +30,7 @@ const studentSchema = new Schema({
     type: { type: String, enum: ['student', 'parent'], default: 'student' },
     parent_fullname: { type: String, default: '' },
     follows: [{ type: Types.ObjectId, ref: 'Institutions' }],
+    follows_ambassadors: [{ type: Types.ObjectId, ref: 'Ambassadors' }],
     wishlist: [{ type: Types.ObjectId, ref: 'Institutions' }],
     applications: [{ type: Types.ObjectId, ref: 'Applications' }],
     events: [{ type: Types.ObjectId, ref: 'Events' }],
@@ -126,11 +127,14 @@ const studentSchema = new Schema({
         default: [],
     },
     is_verified: { type: Boolean, default: false },
+    is_phone_verified: { type: Boolean, default: false },
     sms_verification: { type: Number, default: false },
     six_6_degit_pin: { type: Number, default: false },
     email_verification_token: { type: String, default: false },
     email_verification_token_expire: { type: Date, default: false },
     auth_token: { type: String, default: '' },
+    reset_password_counter: { type: Number, default: 0 },
+    subscription: { type: Types.ObjectId, ref: 'SSubscriptions', default: null },
 }, {
     timestamps: true,
 });

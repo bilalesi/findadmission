@@ -43,16 +43,30 @@ const StudentRepository = {
             email_verification_token: token,
             email_verification_token_expire: expire_at
         }, { new: true });
-    }, 
+    },
     create_new_student: async (student) => {
         let student = await StudentModel.create(student);
         return student;
     },
-    get_all_students_by_emailOrPhone: async ({ email, phone }) => {
+    get_all_students_by_emailOrPhone: async ({ email = "", phone = "" }) => {
         return await StudentModel.find({ '$or': [ { email }, { phone } ] });
     },
     get_student_object_without_password: async (id) => {
         return await StudentModel.findById(id).select('-password').lean();
+    },
+    update_student: async ({ id, student }) => {
+        return await StudentModel.findByIdAndUpdate(id, student, { new: true });
+    },
+    get_student_wishlist_populated: async (id) => {
+        return await StudentModel.findById(id).populate({ path: 'wishlist' }).lean();
+    },
+    get_student_reduced_profile: async ({ id }) => {
+        let student = await StudentModel.findById(id).lean();
+        return {
+            wishlist: student.wishlist.length || 0,
+            following: (Number(student.follows.length) + Number(student.follows_ambassadors.length)) || 0,
+            points: student.points || 0,
+        }
     }
 }
 

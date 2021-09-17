@@ -1,6 +1,6 @@
 const debug = require('debug')('api:reply-handler');
 
-const createServerReply = (res, status, code, message, data, location) => {
+const createServerReply = (res, status, code = "api reply code", message = "api reply message", data = {}, location = "api") => {
     console.info(`Reply Data ${status} -- ${location}`);
     debug(` ✅  Reply Data:`, JSON.stringify(data, null, 2));
     return res.status(status).json({
@@ -8,7 +8,7 @@ const createServerReply = (res, status, code, message, data, location) => {
         "code": code,
         "message": message,
         "reply": data
-    })
+    });
 }
 
 const createServerReplyError = (res, status, code, message, data, location) => {

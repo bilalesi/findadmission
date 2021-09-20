@@ -1,0 +1,11 @@
+api/node_modules
+hudhud/node_modules
+student-next/node_modules
+institution-next/node_modules
+bigbang/node_modules
+.env
+api/.env
+hudhud/.env
+student-next/.env
+institution-next/.env
+bigbang/.env

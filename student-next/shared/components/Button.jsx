@@ -2,9 +2,9 @@ import Link from 'next/link';
 
 
 const Button = {
-    Primary: ({ title, onClick }) => {
+    Primary: ({ title, onClick, className, ...props }) => {
         return(
-            <button onClick={onClick} className='flex items-center justify-center px-4 py-2 w-full bg-primary border-white text-white rounded-md h-11 text-center'>
+            <button onClick={onClick} className={`flex items-center justify-center px-4 py-2 w-full bg-primary border-white text-white rounded-md h-11 text-center ${className}`} { ...props }>
                 {title}
             </button>
         )
@@ -54,7 +54,7 @@ const ButtonLink = {
     PrimaryOutline: ({ title, href }) => {
         return(
             <Link href={href} >
-                <a className='flex items-center justify-center px-4 py-2 w-full bg-white border-primary text-primary rounded-md h-11 text-center'>
+                <a className='flex items-center justify-center px-4 py-2 w-full bg-white border border-primary text-primary rounded-md h-11 text-center'>
                     {title}
                 </a>
             </Link>

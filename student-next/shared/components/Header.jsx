@@ -65,12 +65,12 @@ const MenuItem = ({ title, items = [] }) => {
         <div className='relative'>
             <button onClick={() => setOpenMenu(true)} className={`${styles.menu_item} relative`}>{title}</button>
             { items.length > 0 && openMenu && 
-                <div ref={ref} className={`absolute shadow-sh-6-16-12 top-10 bg-white px-5 py-5 rounded-md flex flex-col items-start justify-start w-full min-w-max`}>
+                <div ref={ref} className={`absolute z-30 shadow-sh-6-16-12 top-10 bg-white px-5 py-5 rounded-md flex flex-col items-start justify-start w-full min-w-max`}>
                     { items.map((row, index) =>
                         {
                             if(row.rows?.length > 0){
                                 return <div>
-                                    <div className='font-bold uppercase text-sm'>{row.title}</div>
+                                    <div className='font-bold uppercase text-sm text-gray-400'>{row.title}</div>
                                     <div className='flex flex-col items-start justify-start m-2'>
                                         {
                                             row.rows.map(item => <Link key={`${title}-${item.title}-${index}`} href={item.url}>
@@ -84,7 +84,7 @@ const MenuItem = ({ title, items = [] }) => {
                                 </div>
                             }
                             return(
-                                <Link key={`${title}-${row.title}`} href={row.url}>
+                                <Link key={`${title}-${row.title}-${index}`} href={row.url}>
                                     <button className='py-2 my-1 px-4 text-left text-sm hover:bg-tretiary rounded-md w-full'>
                                         {row.title}
                                     </button>

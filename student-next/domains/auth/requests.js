@@ -1,18 +1,25 @@
-import { requesterStudent} from "../../network/requester";
+import { requesterStudent, requesterInstitution, requesterCommon } from "../../network/requester";
 
-const signupStudent = async (values) => 
+const signupStudent = async (values) =>
     (await requesterStudent.post('/web/auth/signup?entity=student', { ...values, type: 'student' })).data;
 
-const resendStudentPin = async (email, token) => 
-        (await requesterStudent.post(`/web/auth/resend-signup-pin`, { token, email })).data;
+const resendPin = async (email, token, type) =>
+        (await requesterCommon.post(`/identity/resend-signup-pin`, { token, email, type })).data;
 
-const validateStudentSignupPin = async (pin, token) => 
-        (await requesterStudent.post(`/web/auth/validate-singup-pin`, { token, pin })).data;
+const validatePin = async (pin, token, type) =>
+        (await requesterCommon.post(`/identity/validate-singup-pin`, { token, pin, type })).data;
 
+const signupParentStudent = async (values) =>
+    (await requesterStudent.post('/web/auth/signup?entity=parent', { ...values, type: 'parent' })).data;
+
+const signupInstitution = async (values) =>
+    (await requesterInstitution.post('/web/auth/signup?entity=institution', { ...values })).data;
 
 
 export {
     signupStudent,
-    resendStudentPin,
-    validateStudentSignupPin
+    resendPin,
+    validatePin,
+    signupParentStudent,
+    signupInstitution,
 }

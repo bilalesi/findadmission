@@ -20,6 +20,7 @@ import requestRegisterer from './shared/middlewares/_app';
 
 import commonRoute from './routes/common';
 import studentRoute from './routes/student';
+import institutionRoute from './routes/institution';
 
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
@@ -65,6 +66,7 @@ app.use(cors);
 app.use(requestRegisterer);
 app.use('/api/v1/common', commonRoute());
 app.use('/api/v1/student', studentRoute());
+app.use('/api/v1/institution', institutionRoute());
 // $FlowIssue
 app.use(errorHandler);
 

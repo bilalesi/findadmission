@@ -11,7 +11,8 @@ import SignupParent from './components/SignupParent';
 const entityEnum = ["student", "institution"]
 export default function SignupPage() {
     const router = useRouter();
-    const [selectedEntity, setSelectedEntity] = useState(router.query.entity || entityEnum[0]);
+    console.log('router.query.entity ---> ',router.query.entity);
+    const [selectedEntity, setSelectedEntity] = useState(router.query.entity ?? entityEnum[0]);
     const [studentType, setStudentType] = useState("student");
 
     return (

@@ -1,17 +1,21 @@
 import joi from 'joi';
+
+
 const institutionSchema = joi.object({
-    title: joi.string().required(),
-    description: joi.string().required(),
+    entity_name: joi.string().required(),
     country: joi.string().required(),
-    institute_phone: joi.string().required(),
-    firstName: joi.string().required(),
-    lastName: joi.string().required(),
-    phone: joi.string().required(),
-    email:  joi.string().required(),
+    institution_phone: joi.string().required(),
+
+    firstname: joi.string().required(),
+    lastname: joi.string().required(),
     gender: joi.string().valid('male', 'female', '').required(),
-    password: joi.string().required(),
-    confirm_password: joi.string().required(),
+    email: joi.string().email().required(),
     job_title: joi.string().required(),
+
+    creator_phone: joi.string().required(),
+    phone_ext:  joi.string().optional().allow(null, ''),
+    password: joi.string().min(8).max(14).required(),
+    confirm_password: joi.string().min(8).max(14).required(),
 });
 
 const validate_institution_fn = async (institution) => {
@@ -32,4 +36,31 @@ const validate_institution_fn = async (institution) => {
     }
 }
 
+const toInstitutionDto = (institution) => {
+    return ({
+        name: institution.entity_name,
+        country: institution.country,
+        phone: institution.institution_phone,
+    })
+}
+
+const toInstitutionUserDto = (institutionUser) => {
+    return({
+        firstname: institutionUser.firstname,
+        lastname: institutionUser.lastname,
+        gender: institutionUser.gender,
+        email: institutionUser.email,
+        phone: institutionUser.creator_phone,
+        job_title: institutionUser.job_title,
+        role: "creator",
+        creator: true,
+        password: institutionUser.password,
+    })
+
+}
+
+export {
+    toInstitutionDto,
+    toInstitutionUserDto,
+}
 export default validate_institution_fn;

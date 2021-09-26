@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import paginator from 'mongoose-paginate-v2';
-import { customAlphabet } from 'nanoid';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
+import { customAlphabet } from 'nanoid';
 const nanoid = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 8);
 
 const { Schema, model, Types } = mongoose;
@@ -150,25 +150,28 @@ const hashedPassword = (password) => {
 
 studentSchema.pre('save', function (next) {
     const student = this;
+    if (!student.isModified('password')) 
+        return next();
     student.email = _.trim(student.email.toLowerCase());
-    if (!student.isModified('password')) return next();
     student.password = hashedPassword(student.password);
     student.lastname= _.upperCase(student.lastname);
     student.firstname = _.upperFirst(student.firstname);
     student.uri = _.kebabCase(`${student.type === 'student' ? 'student' : 'parent' } ${student.lastname} ${student.firstname} ${nanoid()}`);
     student.descriptif_name = student.type === 'student' ? `${student.firstname} ${student.lastname} ${student.email.split('@')[0]}`.toLocaleLowerCase() : '';
-    student.fullname = student.type === 'student' ? `${student.firstname} ${student.lastname}`.toLowerCase() : '';
+    student.fullname = student.type === 'student' ? `${student.firstname} ${student.lastname}`.toLowerCase() : `${student.parent_fullname}`.toLowerCase();
     return next();
 });
 
 studentSchema.methods.isValidPassword = function isValidPassword(password) {
     return bcrypt.compareSync(password, this.password);
 };
+
+
 studentSchema.index({ lastname: 1 });
 studentSchema.index({ firstname: 1 });
 studentSchema.index({ email: 1 });
 studentSchema.index({ phone: 1 });
-studentSchema.index({ fullname: 'text', email: 'text', descriptif_name: 'text' });
+studentSchema.index({ fullname: 'text', email: 'text', descriptif_name: 'text', uri: 'text' });
 
 
 

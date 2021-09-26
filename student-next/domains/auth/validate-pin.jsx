@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 
 import { MainPageLayout } from '../../layouts';
 import { digitify } from '../../shared/functions';
-import { resendStudentPin, validateStudentSignupPin } from './requests';
+import { resendPin, validatePin } from './requests';
 
 export default function ValidatePin() {
     const [ pinCode, setPinCode ] = useState();
@@ -21,23 +21,23 @@ export default function ValidatePin() {
     const handleResetPinFromBackend = async () => {
         setLoadingRegeneration(true);
         try {
-            let response = await resendStudentPin(query.email, query.token);
+            let response = await resendPin(query.email, query.token, query.type);
             console.log('handleResetPinFromBackend --> ', response);
-            if(response.code === "InvalidOperation"){
+            if(response.code === "INVALID_OPERATION"){
                 notifications.showNotification({
                     title: 'Error',
                     message: 'Invalid opertaion, please open the link from your inbox',
                     color: 'red', autoClose: false, position: 'top-right',
                 });
-            } else if(response.code === "StudentPinRegenerationFailedQuotaExeeded"){
+            } else if(response.code === "PIN_REGENERATION_FAILED_QUOTA_EXEEDED"){
                 notifications.showNotification({
                     title: 'Error',
                     message: 'Invalid opertaion, you request 3 times or more, for a new pin, please contact findadmission support team', 
                     color: 'red', position: "top-right", autoClose: false,
                 });
-            } else if(response.code === "StudentPinRegenerationSuccess"){
+            } else if(response.code === "PIN_REGENERATION_SUCCESS"){
                 notifications.showNotification({
-                    title: 'New PIN arrived',
+                    title: 'New PIN has been sent',
                     message: router.query.toastMessage,
                     color: 'green', position: "top-right", autoClose: false,
                 });
@@ -45,6 +45,7 @@ export default function ValidatePin() {
                 restart(dayjs().add(5, 'second').toDate(), true);
             }
         } catch (error) {
+            console.log('handleResetPinFromBackend --> ', error);
             notifications.showNotification({
                 title: 'Error',
                 message: "An error occured during pin regeneration, please try again",
@@ -58,16 +59,32 @@ export default function ValidatePin() {
         try {
             if(!isNaN(value) && !isNaN(parseInt(value))){
                 if(value.length === 6){
-                   let response =  await validateStudentSignupPin(Number(value), query.token);
-                   console.log('handleValidatePin', response);
+                   let response =  await validatePin(Number(value), query.token, query.type);
+                   // TODO: signin function will be called from next-auth
+                   // it will generate the token and redirect to the home page
+                   if(response.code === "PIN_VALIDATED_SUCCESS"){
+                        return query.type === "student" ?
+                                router.push('/student') :
+                            query.type === "entity" ?
+                                router.push('/institution') :
+                                router.push('/');
+                   }
                 }
             }
         } catch (error) {
-            notifications.showNotification({
-                title: 'Error',
-                message: "An error occured during pin validation, please try again",
-                color: 'red', position: "top-right", autoClose: false
-            });
+            if(error.response.data.code === "INVALID_PIN"){
+                notifications.showNotification({
+                    title: 'Error PIN validation',
+                    message: 'Invalid PIN, please try again',
+                    color: 'red', position: "top-right", autoClose: false
+                });
+            }else{
+                notifications.showNotification({
+                    title: 'Error',
+                    message: "An error occured during pin validation, please try again",
+                    color: 'red', position: "top-right", autoClose: false
+                });
+            }
         }
     }
     return (

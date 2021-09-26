@@ -2,7 +2,7 @@ const debug = require('debug')('api:reply-handler');
 
 const createServerReply = (res, status, code = "api reply code", message = "api reply message", data = {}, location = "api") => {
     console.info(`Reply Data ${status} -- ${location}`);
-    debug(` ✅  Reply Data:`, JSON.stringify(data, null, 2));
+    debug(` ✅  Reply Data:`, data.debug ? JSON.stringify(data, null, 2) : null);
     return res.status(status).json({
         "done": true,
         "code": code,

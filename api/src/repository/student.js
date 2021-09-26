@@ -45,7 +45,9 @@ const StudentRepository = {
         }, { new: true });
     },
     create_new_student: async (student) => {
+        console.log('create_new_student', student);
         let _student = await StudentModel.create(student);
+        console.log('create_new_student', _student);
         return _student;
     },
     get_all_students_by_emailOrPhone: async ({ email = "", phone = "" }) => {

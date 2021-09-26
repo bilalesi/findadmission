@@ -18,10 +18,11 @@ const studentSchema = joi.object({
     password: joi.string().min(8).max(14).required(),
     confirm_password: joi.string().min(8).max(14).required().valid(joi.ref('password')),
     type: joi.string().valid('student', 'parent').required(),
-    parent_fullname: joi.alternatives().conditional('type', { is: "parent", then: joi.string().required(), otherwise: joi.allow(null, "") }),
+    parent_fullname: joi.alternatives().conditional('type', { is: "parent", then: joi.string().required(), otherwise: joi.optional().allow(null, "") }),
 });
 
 const validateStudentFn = async (student) => {
+    console.log('validateStudentFn --> ',student);
     try {
         const values = await studentSchema.validateAsync(student, { abortEarly: true, allowUnknown: true });
         return {
@@ -29,6 +30,7 @@ const validateStudentFn = async (student) => {
             values,
         }
     } catch (error) {
+        console.log('validateStudentFn - error --> ',error);
         return {
             valid: false,
             error: {

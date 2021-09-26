@@ -36,10 +36,12 @@ export default async (req, res, next) => {
             return createServerReplyError(res, httpStatus.BAD_REQUEST, "INVALID_INPUT", "input data is not valid",
                 { path: validatedInputs.error.field }, STUDENT_SIGNUP_HANDLER);
         }
-        let dto = toDto(validatedInputs.values);
+        let dto = toDto({ ...validatedInputs.values, is_parent: req.body.type === 'parent' });
+        console.log(STUDENT_SIGNUP_HANDLER, dto);
         try {
             let student = await StudentRepository.create_new_student(dto);
             let pin = generate_random_pin_6_digits();
+            console.log(STUDENT_SIGNUP_HANDLER, pin);
             let token = generate_validation_token({ email: student.email, type: 'student', user_id: student._id, exp: 3 * 24 * 60 * 60 * 1000 }); // 3 days
             console.log('token', token, verifyJwt(token, "AUTH_JWT_SIGNATURE"));
             Promise.all([
@@ -49,7 +51,7 @@ export default async (req, res, next) => {
                 console.log('---> result', result);
                 // TODO: send email pin and token url
                 return createServerReply(res, httpStatus.CREATED, "STUDENT_CREATED", "Student created",
-                    { id: student._id, redirect: `${rootRedirect}/validate-email?token=${token}&email=${student.email}` }, STUDENT_SIGNUP_HANDLER);
+                    { id: student._id, redirect: `${rootRedirect}/validate-email?token=${token}&email=${student.email}&type=student` }, STUDENT_SIGNUP_HANDLER);
             })
         } catch (error) {
             return createServerReplyError(res, httpStatus.BAD_REQUEST, "STUDENT_NOT_CREATED",

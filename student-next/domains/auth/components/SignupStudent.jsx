@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import _ from 'lodash';
-import validatePhone, { phone } from 'phone';
+import validatePhone from 'phone';
 import dayjs from 'dayjs'
 import custumParseFormat from 'dayjs/plugin/customParseFormat';
 import { useNotifications } from '@mantine/notifications';
@@ -108,11 +108,6 @@ export default function SignupStudent() {
             animate={{ opacity: 1 }}
         >
             <form onSubmit={handleSubmit} name='signup-student' aria-describedby='sign up findadmission' id='signup-student' className='w-full' method='POST'>
-                {/* { console.group('SignupStudent') }
-                { console.log('signup-student values', values) }
-                { console.log('signup-student errors', errors) }
-                { console.log('signup-student indicatif', phoneIndicatif) }
-                { console.groupEnd('SignupStudent') } */}
                 <Grid>
                     <Col span={12} md={6}>
                         <InputWrapper required label="First name" error={errors.firstname && touched.firstname && errors.firstname }>
@@ -237,10 +232,7 @@ export default function SignupStudent() {
                                         error={errors.phone_indicatif && touched.phone_indicatif && errors.phone_indicatif}
                                         value={values.phone_indicatif}
                                         onSearchChange={e => {
-                                            console.log('onSearchChange', e);
-                                            console.log('dataCountries?.countries', dataCountries?.countries);
                                             const result = dataCountries?.countries?.filter(item => item.dial_code.includes(_.toString(e)))
-                                            console.log('onSearchChange result', result);
                                             if(e === ''){
                                                 setCountryDailCodes(_.sortBy(dataCountries?.countries?.map(item => ({ value: item._id, label: item.dial_code })), 'label'))
                                             } else {

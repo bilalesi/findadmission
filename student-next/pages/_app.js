@@ -6,8 +6,8 @@ function MyApp({ Component, pageProps }) {
     <MantineProvider theme={{
       fontFamily: 'Inter, sans-serif',
       colors: {
-        'fa-primary': ["#2D79AD",  "#14A60E", "#CDE9F8", "#BDBDBD", "#191919", "#DBDBDB", "#EF5252"]],
-      },
+        'fa-primary': ["#2D79AD",  "#14A60E", "#CDE9F8", "#BDBDBD", "#191919", "#DBDBDB", "#EF5252"]
+      }
     }}>
       <NotificationsProvider>
         <Component {...pageProps} />

@@ -1,5 +1,5 @@
 import StudentModel from '../schemas/student.js';
-import CountryRepository from '../common/country.js';
+import CountryRepository from './country';
 
 const StudentRepository = {
     // @{function} get student by id basic
@@ -31,8 +31,8 @@ const StudentRepository = {
     // @{function} save six degit pin for signup
     // @{param0} id: student id
     // @{param1} pin: six (06) degit pin number
-    update_pin: async ({ id, pin }) => {
-        return await StudentModel.findByIdAndUpdate(id, { six_6_degit_pin: pin }, { new: true });
+    update_pin: async ({ id, pin, pin_reset_counter }) => {
+        return await StudentModel.findByIdAndUpdate(id, { six_6_degit_pin: pin, pin_reset_counter }, { new: true });
     },
     // @{function} save signed token for sign up
     // @{param0} id: student id
@@ -45,8 +45,8 @@ const StudentRepository = {
         }, { new: true });
     },
     create_new_student: async (student) => {
-        let student = await StudentModel.create(student);
-        return student;
+        let _student = await StudentModel.create(student);
+        return _student;
     },
     get_all_students_by_emailOrPhone: async ({ email = "", phone = "" }) => {
         return await StudentModel.find({ '$or': [ { email }, { phone } ] });

@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import paginator from 'mongoose-paginate-v2';
 import { customAlphabet } from 'nanoid';
+import bcrypt from 'bcrypt';
+import _ from 'lodash';
 const nanoid = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 8);
 
 const { Schema, model, Types } = mongoose;
@@ -52,7 +54,7 @@ const studentSchema = new Schema({
         addressline: { type: String, default: '' },
     },
     funding_source: {
-        type: { type: String, enum: ['self', 'parents', 'family_friends', 'goverment_organisation', 'loadn', 'other'], default: '' },
+        type: { type: String, enum: ['self', 'parents', 'family_friends', 'goverment_organisation', 'loadn', 'other'], default: 'other' },
         family_friends: {
             firstname: { type: String, default: '' },
             lastname: { type: String, default: '' },
@@ -130,8 +132,9 @@ const studentSchema = new Schema({
     is_phone_verified: { type: Boolean, default: false },
     sms_verification: { type: Number, default: false },
     six_6_degit_pin: { type: Number, default: false },
+    pin_reset_counter: { type: Number, default: 0 },
     email_verification_token: { type: String, default: false },
-    email_verification_token_expire: { type: Date, default: false },
+    email_verification_token_expire: { type: Date, default: "" },
     auth_token: { type: String, default: '' },
     reset_password_counter: { type: Number, default: 0 },
     subscription: { type: Types.ObjectId, ref: 'SSubscriptions', default: null },
@@ -141,18 +144,20 @@ const studentSchema = new Schema({
 
 
 const hashedPassword = (password) => {
-    const salt = bcrypt.genSaltSync(PASSWORD_SALT_ROUNDS);
+    const salt = bcrypt.genSaltSync(Number(process.env.PASSWORD_SALT_ROUNDS));
     return bcrypt.hashSync(password, salt);
 };
 
 studentSchema.pre('save', function (next) {
     const student = this;
-    student.email = student.email.toLowerCase();
+    student.email = _.trim(student.email.toLowerCase());
     if (!student.isModified('password')) return next();
     student.password = hashedPassword(student.password);
-    student.uri = _.kebabCase(`${student.type === 'student' ? 'student' : 'parent' } ${student.lastName} ${student.firstName} ${nanoid()}`);
-    student.descriptif_name = student.type === 'student' ? `${student.firstName} ${student.lastName} ${student.email.split('@')[0]}`.toLocaleLowerCase() : '';
-    student.fullname = student.type === 'student' ? `${student.firstName} ${student.lastName}`.toUpperCase() : '';
+    student.lastname= _.upperCase(student.lastname);
+    student.firstname = _.upperFirst(student.firstname);
+    student.uri = _.kebabCase(`${student.type === 'student' ? 'student' : 'parent' } ${student.lastname} ${student.firstname} ${nanoid()}`);
+    student.descriptif_name = student.type === 'student' ? `${student.firstname} ${student.lastname} ${student.email.split('@')[0]}`.toLocaleLowerCase() : '';
+    student.fullname = student.type === 'student' ? `${student.firstname} ${student.lastname}`.toLowerCase() : '';
     return next();
 });
 
@@ -163,7 +168,7 @@ studentSchema.index({ lastname: 1 });
 studentSchema.index({ firstname: 1 });
 studentSchema.index({ email: 1 });
 studentSchema.index({ phone: 1 });
-studentSchema.index({ fullname: 'text', email: 'text' });
+studentSchema.index({ fullname: 'text', email: 'text', descriptif_name: 'text' });
 
 
 

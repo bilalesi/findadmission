@@ -33,6 +33,6 @@ export default requireAuth(async (req, res, next, { institution }) => {
             institution: institution._id, feeds
         }, GET_INSTITUTION_FEEDS_SORTED_PAGINATED_HANDLER); 
     } catch (error) {
-        createServerError(res, error, error.message, GET_INSTITUTION_FEEDS_SORTED_PAGINATED_HANDLER);
+        return createServerError(res, error, error.message, GET_INSTITUTION_FEEDS_SORTED_PAGINATED_HANDLER);
     }
 })

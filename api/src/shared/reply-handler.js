@@ -11,14 +11,15 @@ const createServerReply = (res, status, code = "api reply code", message = "api 
     });
 }
 
-const createServerReplyError = (res, status, code, message, data, location) => {
-    console.warn(`Reply Data Error ${status} -- ${location}`);
-    debug(` ⚠️  Reply Data Error:`, JSON.stringify(data, null, 2));
+const createServerReplyError = (res, status, code, message, data, location, error = null) => {
+    console.warn(`Reply Data Error ${status} -- ${location}`, error);
+    debug(` ⚠️  Reply Data Error:`, JSON.stringify(error, null, 2));
     return res.status(status).json({
         "done": false,
         "code": code,
         "message": message,
-        "error": data
+        "error": data,
+        location: location
     })
 }
 export { createServerReplyError, createServerReply }

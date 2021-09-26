@@ -1,5 +1,5 @@
 import CountryModel from '../schemas/country';
-
+import StateModel from '../schemas/state';
 
 
 const CountryRepository = {
@@ -17,8 +17,16 @@ const CountryRepository = {
     // @{params}
     async get_all_countries() {
         return await CountryModel.find({});
+    },
+    // @{function} get all enabled country
+    // @{params}
+    async get_all_enabled_countries() {
+        return await CountryModel.find({ enabled: true }).select("_id name code dial_code iso2").lean();
+    },
+    //
+    async get_states_of_country(id) {
+        return await StateModel.find({ country: id }).select('state_code name').lean();
     }
-
 }
 
 

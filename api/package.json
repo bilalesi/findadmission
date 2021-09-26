@@ -9,7 +9,7 @@
   },
   "author": "ovall-services",
   "scripts": {
-    "start": "cross-env NODE_ENV=development cross-env DEBUG=findadmission* nodemon --exec babel-node dev.js",
+    "start": "cross-env NODE_ENV=development cross-env DEBUG=findadmission*,api* nodemon --exec babel-node dev.js",
     "scripter": "cross-env DEBUG=scripts* babel-node ./src/scripts/country-script.js",
     "dev": "forever start dev.js",
     "dev1": "forever start -c babel-node dev.js"
@@ -27,6 +27,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-enforces-ssl": "^1.1.0",
+    "express-useragent": "^1.0.15",
     "helmet": "^4.6.0",
     "host-validation": "^2.0.1",
     "hpp": "^0.2.3",

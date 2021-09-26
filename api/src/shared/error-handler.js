@@ -8,6 +8,7 @@ const createServerError = (res, error, message, location) => {
         done: false,
         code: 'ServerError',
         message: message,
+        location: location,
     })
 }
 

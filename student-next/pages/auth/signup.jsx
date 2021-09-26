@@ -1,4 +1,4 @@
-import SignupPage from "../domains/auth/signup";
+import SignupPage from "../../domains/auth/signup";
 
 
 

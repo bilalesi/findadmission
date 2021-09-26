@@ -4,17 +4,17 @@ import phoneValidator from 'phone';
 
 
 const studentSchema = joi.object({
-    firstName: joi.string().min(2).required(),
-    lastName: joi.string().min(2).required(),
-    phone: joi.string().custom((value, helper) => !phoneValidator(value).isValid ? helper.message('Phone must be valid') : true).required(),
+    firstname: joi.string().min(2).required(),
+    lastname: joi.string().min(2).required(),
+    phone: joi.string().custom((value, helper) => !phoneValidator(value).isValid ? helper.message('Phone must be valid') : value).required(),
     whatsup: joi.string().required(),
     email:  joi.string().email().required(),
-    gender: joi.string().valid('male', 'female', '').required(),
+    gender: joi.string().valid('male', 'female', '').allow(null,''),
     country: joi.string().required(),
     state: joi.string().required(),
-    birth_day: joi.string().min(1).max(2).required(),
-    birth_month: joi.string().min(1).max(2).required(),
-    birth_year: joi.string().min(4).max(4).required(),
+    birthday: joi.string().isoDate().required(),
+    // birth_month: joi.string().min(1).max(2).required(),
+    // birth_year: joi.string().min(4).max(4).required(),
     password: joi.string().min(8).max(14).required(),
     confirm_password: joi.string().min(8).max(14).required().valid(joi.ref('password')),
     type: joi.string().valid('student', 'parent').required(),
@@ -42,7 +42,7 @@ const validateStudentFn = async (student) => {
 const toDto = (student) => {
     return ({
         ...student,
-        birthday: dayjs(`${student.birth_year}-${student.birth_month}-${student.birth_day}`).toDate(),
+        birthday: dayjs(student.birthday).toDate(),
     })
 }
 export { toDto };

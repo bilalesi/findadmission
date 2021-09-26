@@ -7,7 +7,7 @@ import StudentRepository from "../../../repository/student";
 import { generate_auth_token, generate_random_pin_6_digits, generate_validation_token } from '../../../shared/encryption/generate-jwt';
 import validateStudentFn, { toDto } from "../../../validator/student";
 
-
+const IS_PROD = process.env.NODE_ENV === 'production';
 const rootRedirect = IS_PROD ? `${process.env.APP_STUDENT_REDIRECT}/web/auth` : `${process.env.APP_STUDENT_REDIRECT}/web/auth`;
 const STUDENT_SIGNIN_HANDLER = "student-signin-handler";
 

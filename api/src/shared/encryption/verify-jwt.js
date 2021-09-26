@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 
 export default (token, key) => {
+    let decoded;
     try {
         decoded = jwt.verify(token, process.env[key]);
         return {
@@ -17,7 +18,8 @@ export default (token, key) => {
         }
         return {
             valid: false,
-            error: errMessage
+            error: errMessage,
+            decoded
         };;
     }
 }

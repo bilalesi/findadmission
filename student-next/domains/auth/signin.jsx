@@ -51,7 +51,7 @@ export default function SigninPage() {
                         <div className='w-full max-w-md my-2'><div className='w-full mx-auto my-2 h-px bg-background'/></div>
                         <div className='w-full max-w-md my-2'><div className='text-left text-sm pointer-events-none select-none'>Don't have an account? </div></div>
                         <div className='w-full max-w-md my-2'>
-                            <ButtonLink.PrimaryOutline title='Get Started' href={selectedEntity ? `/signup?entity=${selectedEntity}` : '/signup'}/>
+                            <ButtonLink.PrimaryOutline title='Get Started' href={selectedEntity ? `/auth/signup?entity=${selectedEntity}` : '/auth/signup'}/>
                         </div>
                     </div>
                 </div>

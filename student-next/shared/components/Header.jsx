@@ -48,7 +48,7 @@ function Header() {
                         </div>
                     </div>
                     <div id='header-right' className=''>
-                        <ButtonLink.Primary title='Login' href='/signin'/>
+                        <ButtonLink.Primary title='Login' href='/auth/signin'/>
                     </div>
                 </div>
             </div>

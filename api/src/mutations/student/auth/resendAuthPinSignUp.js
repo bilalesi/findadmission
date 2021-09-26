@@ -5,9 +5,10 @@ import { createServerReply, createServerReplyError  } from '../../../shared/repl
 import StudentRepository from "../../../repository/student";
 import { generate_random_pin_6_digits, generate_validation_token } from '../../../shared/encryption/generate-jwt';
 import verifyJwt from '../../../shared/encryption/verify-jwt';
+import decodeJwt from '../../../shared/encryption/decode-jwt';
 
-
-const rootRedirect = IS_PROD ? `${process.env.APP_STUDENT_REDIRECT}/web/auth` : `${process.env.APP_STUDENT_REDIRECT}/web/auth`;
+const IS_PROD = process.env.NODE_ENV === 'production';
+const rootRedirect = IS_PROD ? `${process.env.APP_REDIRECT}/auth` : `${process.env.APP_REDIRECT}/auth`;
 const STUDENT_SIGNUP_RESEND_PIN_HANDLER = "student-signup-resend-pin-handler";
 
 
@@ -22,26 +23,42 @@ const STUDENT_SIGNUP_RESEND_PIN_HANDLER = "student-signup-resend-pin-handler";
  */
 export default async (req, res, next) => {
     try {
-        let { email } = req.body;
+        let { email, token } = req.body;
+        let tokenDecoded = decodeJwt(token);
+        console.log(STUDENT_SIGNUP_RESEND_PIN_HANDLER,  email, tokenDecoded);
+        if(tokenDecoded.isDecoded && !tokenDecoded.decoded.email === email) {
+            return createServerReplyError(res, httpStatus.BAD_REQUEST, 'InvalidOperation', 'Invalid token', {}, STUDENT_SIGNUP_RESEND_PIN_HANDLER, );
+        }
+
         let student = await StudentRepository.get_student_by_email(email);
         if(!student){
             return createServerReplyError(res, httpStatus.BAD_REQUEST,
                     "INVALID_EMAIL", "Invalid email", {}, STUDENT_SIGNUP_RESEND_PIN_HANDLER);
         }
+        if(student.pin_reset_counter >= 3){
+            return createServerReply(res, httpStatus.CREATED, "StudentPinRegenerationFailedQuotaExeeded", "Student request more than 3 times for new pin",
+                { id: student._id, message: { toastType: 'error', toastMessage: 'You request than 3 times for new pin, please contact findadmission support team' } }, STUDENT_SIGNUP_RESEND_PIN_HANDLER);
+        }
         let pin = generate_random_pin_6_digits();
-        let token = generate_validation_token({ user_id: student._id, type: 'student', email: student.email, secret: pin });
+        let _token = generate_validation_token({ user_id: student._id, type: 'student', email: student.email, exp: 1 * 24 * 60 * 60  }); // 1 day
+        console.log(STUDENT_SIGNUP_RESEND_PIN_HANDLER,  'pin', pin, 'token', _token);
         Promise.all([
-            StudentRepository.update_pin({ id: student._id, pin}),
-            StudentRepository.update_validation_token({ id: student._id,  token: token, expire_at: dayjs.unix(verifyJwt(token, "AUTH_JWT_SIGNATURE").decoded.exp).toISOString() })
+            StudentRepository.update_pin({ id: student._id, pin, pin_reset_counter: student.pin_reset_counter + 1 }),
+            StudentRepository.update_validation_token({ id: student._id,  token: _token, expire_at: dayjs.unix(verifyJwt(_token, "AUTH_JWT_SIGNATURE").decoded.exp).toISOString() })
         ]).then((result) => {
             // TODO: send email pin and token url
-            return createServerReply(res, httpStatus.CREATED, "StudentPinRegenerated", "Student created",
-                { id: student._id, redirect: `${rootRedirect}?token=${token}&toastType=success&toastMessage=Your email address has been validated!` }, STUDENT_SIGNUP_HANDLER);
+            return createServerReply(res, httpStatus.CREATED, "StudentPinRegenerationSuccess", "Student Pin regenerated one more time",
+                {
+                    id: student._id,
+                    redirect: `${rootRedirect}/validate-email?token=${_token}&email=${email}&toastType=success&toastMessage=A new pin has been sent to your email, please check your inbox` 
+                },
+                STUDENT_SIGNUP_RESEND_PIN_HANDLER);
         }).catch((err) => {
-            return createServerReplyError(res, httpStatus.BAD_REQUEST, "StudentPinNotRegenerated",
-                "Student pin not regenerated", null, STUDENT_SIGNUP_RESEND_PIN_HANDLER);
+            console.log(err);
+            return createServerReplyError(res, httpStatus.BAD_REQUEST, "StudentPinRegenerationFailed",
+                "Student pin not regenerated", err, STUDENT_SIGNUP_RESEND_PIN_HANDLER);
         })
     } catch (error) {
-        createServerError(res, error, error.message, STUDENT_SIGNUP_RESEND_PIN_HANDLER);
+        return createServerError(res, error, error.message, STUDENT_SIGNUP_RESEND_PIN_HANDLER);
     }
 }

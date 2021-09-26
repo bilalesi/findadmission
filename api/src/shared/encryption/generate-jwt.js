@@ -33,14 +33,14 @@ export const generate_unsubscribe_token = (
 };
 
 
-export const generate_validation_token = ({ user_id, type, email, secret }) => {
+export const generate_validation_token = ({ user_id, type, email, secret = null, exp = 60 * 60 * 24, props = {} }) => {
     if (!user_id || !type || !email) return null;
     let token;
     try {
         token = jwt.sign(
-            { user_id, type, email, secret },
+            { user_id, type, email, secret, ...props },
             process.env.AUTH_JWT_SIGNATURE,
-            { expiresIn: 60 * 60 * 24 } // 1 day
+            { expiresIn: exp }
         );
     } catch (err) {
         return null;

@@ -53,7 +53,7 @@ export const generate_validation_token = ({ user_id, type, email, secret = null,
     return token;
 }
 
-export const generate_auth_token = (user_id, type, email, other_data = {}) => {
+export const generate_auth_token = ({ user_id, type, email, other_data = {} }) => {
     if (!user_id || !type || !email) return null;
     let token;
     try {

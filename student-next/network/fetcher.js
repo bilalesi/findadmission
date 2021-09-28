@@ -1,6 +1,10 @@
 import axios from "axios";
 import useSWR from "swr";
 
+const apiRoot = axios.create({
+   baseURL: 'http://localhost:3001/api/v1'
+})
+
 const basicFetcher = async (key) => (await axios.get(key, { baseURL: 'http://localhost:3001/api/v1' })).data;
 const fetcher = (key) => {
     const { data, error } = useSWR(key, basicFetcher, {
@@ -32,3 +36,5 @@ export {
     fetcher,
     conditionalFetcher
 }
+
+export default apiRoot;

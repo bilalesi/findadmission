@@ -38,6 +38,9 @@ const hashedPassword = (password) => {
     return bcrypt.hashSync(password, salt);
 };
 
+institutionUserSchema.methods.isValidPassword = function isValidPassword(password) {
+    return bcrypt.compareSync(password, this.password);
+};
 
 institutionUserSchema.pre('save', function (next) {
     try {

@@ -15,6 +15,8 @@ const signupParentStudent = async (values) =>
 const signupInstitution = async (values) =>
     (await requesterInstitution.post('/web/auth/signup?entity=institution', { ...values })).data;
 
+const signinOrchestrator = async (values) =>
+    (await requesterCommon.post('/identity/signin', values)).data;
 
 export {
     signupStudent,
@@ -22,4 +24,5 @@ export {
     validatePin,
     signupParentStudent,
     signupInstitution,
+    signinOrchestrator
 }

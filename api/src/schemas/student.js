@@ -144,7 +144,9 @@ const studentSchema = new Schema({
 
 
 const hashedPassword = (password) => {
+    console.log('Number(process.env.PASSWORD_SALT_ROUNDS)', Number(process.env.PASSWORD_SALT_ROUNDS));
     const salt = bcrypt.genSaltSync(Number(process.env.PASSWORD_SALT_ROUNDS));
+    console.log('salt', salt);
     return bcrypt.hashSync(password, salt);
 };
 
@@ -163,6 +165,7 @@ studentSchema.pre('save', function (next) {
 });
 
 studentSchema.methods.isValidPassword = function isValidPassword(password) {
+    console.log('isValidPassword', bcrypt.compareSync(password, this.password));
     return bcrypt.compareSync(password, this.password);
 };
 

@@ -9,7 +9,7 @@ const institutionUserRepository = {
         return (await institutionUserModel.findById(id));
     },
     async get_institution_user_by_email(email) {
-        return (await institutionUserModel.findOne({ email }).lean());
+        return (await institutionUserModel.findOne({ email }));
     },
     create_new_institution_user: async (institutionUser) => {
         let _institutionUser = await institutionUserModel.create(institutionUser);

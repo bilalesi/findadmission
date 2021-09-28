@@ -35,7 +35,7 @@ const footerColumns = [
 
 const mainHeaderColumns = [
     { title: 'Home', rows: [], url: '/' },
-    { title: 'About Us', rows: [], url: '/about-us' },
+    { title: 'About Us', rows: [], url: '/entity/student' },
     { title: 'For Students', rows: [
         { title: 'What we do', url: '/what-we-do' },
         { title: 'Premium Plan', url: '/premium-plan' },

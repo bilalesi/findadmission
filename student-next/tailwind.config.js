@@ -23,7 +23,11 @@ module.exports = {
       },
       'minHeight':{
         'exclude-header': "calc(100vh - 80px)",
-      }
+      },
+      backgroundImage: {
+        'fa-primary-pattern': "linear-gradient(45deg, #2D79AD 0%, rgb(21, 170, 191) 100%)",
+        'fa-primary-dark-pattern': "linear-gradient(45deg, rgb(21, 170, 191) 0%, #12659b 80%)",
+       }
     },
     'boxShadow': {
       'sh-6-16-12': 'rgba(0, 0, 0, 0.12) 0px 6px 16px',
